@@ -1,16 +1,21 @@
 package adcowebsolutions.crypto;
 
+import java.io.Serializable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+
+import adcowebsolutions.beans.PasswordBean;
 
 /**
  * Provides password hashing and password generating functions.
  * 
  * @author Russell Adcock
- *
  */
-public class PasswordManager {
-	
+public class PasswordManager implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private Integer length;
 	
 	@Autowired
@@ -42,7 +47,7 @@ public class PasswordManager {
 	 * @return As generated password
 	 */
 	public String generatePassword() {
-		String passChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+		String passChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890";
 	    //Next I am going to generate a number that will
 	    //be used to reference a character in this string
 	    StringBuffer password = new StringBuffer(length);
@@ -55,6 +60,29 @@ public class PasswordManager {
 	    }
 	      
 	    return password.toString();
+	}
+	
+	public boolean isValidLength(String password) {
+		if (password == null) return false;
+		return length <= password.length();
+	}
+	
+	public boolean passwordAndUserIdMatch(String userName, PasswordBean passwordBean) {
+		return userName.toLowerCase().equals(passwordBean.getPassword().toLowerCase());
+	}
+
+	public boolean passwordsMatch(PasswordBean passwordBean) {
+		if (passwordBean.getPassword() == null || passwordBean.getPassword().length() == 0) {
+			return false;
+		}
+		if (passwordBean.getVerify() == null || passwordBean.getVerify().length() == 0) {
+			return false;
+		}
+		
+		if (passwordBean.getPassword().equals(passwordBean.getVerify())) {
+			return true;
+		}
+		return false;
 	}
 
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {

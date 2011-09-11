@@ -52,6 +52,18 @@ public class PasswordManagerTest {
 		assertTrue(passwordManager.isPasswordValid("9bc34549d565d9505b287de0cd20ac77be1d3f2c", "test1234"));
 		assertFalse(passwordManager.isPasswordValid("9bc34549d565d9505b287de0cd20ac77be1d3f2c", "test123"));
 	}
+	
+	// By default, passwordManager is initialised with password max length of 8.
+	@Test
+	public void testIsPasswordValidLength() throws Exception {
+		
+		assertNotNull(passwordManager);
+		
+		assertTrue(passwordManager.isValidLength("test1234"));
+		assertTrue(passwordManager.isValidLength("test12345"));
+		assertFalse(passwordManager.isValidLength("test123"));
+	
+	}
 
 	public PasswordManager getPasswordManager() {
 		return passwordManager;

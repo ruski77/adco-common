@@ -1,11 +1,11 @@
 package adcowebsolutions.constants;
 
 /**
- * This interface defines common constant values for all applications.
+ * This class defines common constant values for all applications.
  * 
  * @author Russell Adcock
  */
-public interface GlobalConstants {
+public class GlobalConstants {
 	
 	/* user account constants */
 	public static final String CONST_SUPPORT = "SUPPORT";
@@ -101,5 +101,15 @@ public interface GlobalConstants {
 	
 	//system config types
 	public static final String CONST_SYS_CONFIG_MAIL_UPDATES = "send.content.updates.to.mailing.list";
+	
+	public static final String CONST_MESSAGES = "Messages";
+	
+	public static final String CONST_ACCOUNT_SESSION = "accountSession";
+	
+	public static final String UPDATE_PASSWORD_DISPLAYED = "UPDATE_PASSWORD_DISPLAYED";
+	
+	public static final String APPLICATION_CONTEXT_PATH = "/WEB-INF/spring/applicationContext.xml";
+	
+	public static final String LOGOUT_FILTER_APPLIED = "LOGOUT_FILTER_APPLIED";
 
 }
