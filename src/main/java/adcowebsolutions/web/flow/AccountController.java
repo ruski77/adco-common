@@ -64,15 +64,12 @@ public class AccountController extends GenericFlowController {
 		this.accountRoleService = accountRoleService;
 	}
 	
-	public List<Account> getAccounts() {
-		log.debug("getAccounts()");
-		
+	public void loadAccounts() {
+		log.debug("loadAccounts()");
 		boolean messageFound = false;
 
 		try {
-			if (accounts == null) {
-				accounts = accountService.findAll();
-			}
+			accounts = accountService.findAll();
 			
 			if (getCurrentRequest() != null) {
 				String successUpdateMessage = getCurrentRequest().getParameter("successUpdate");
@@ -94,12 +91,6 @@ public class AccountController extends GenericFlowController {
 			setErrorMessage("error_view_users", e.getMessage());
 			notifySupport(e);
 		}
-		
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
 	}
 	
 	public StreamedContent getStreamedAvatar() {
@@ -153,8 +144,8 @@ public class AccountController extends GenericFlowController {
 			account.setAvatar(null);
 			account.setAvatarMimeType(null);
 			accountService.update(account);
+			loadAccounts();
 			setSuccessMessage("success_delete_avatar", getSelectedAccount().getUserName());
-			setAccounts(null);
 		} catch (Exception e) {
 			log.error("Error deleting avatar for {} due to: {}", getSelectedAccount().getUserName(), e.getMessage());
 			e.printStackTrace();
@@ -194,9 +185,7 @@ public class AccountController extends GenericFlowController {
 				account.setRoles(null);
 				addRolesToAccount(account);
 				accountService.update(account);
-				setSuccessMessage("success_update_user", account.getUserName());
 				reset();
-				setAccounts(null);
 			} else {
 				setFailureMessage("failure_update_user_null");
 				forward = FAILURE;
@@ -243,7 +232,6 @@ public class AccountController extends GenericFlowController {
 			} else {
 				setFailureMessage("failure_update_user_null");
 			}
-			setAccounts(null);
 		} catch (Exception e) {
 			log.error("Error creating user details for {} due to: {}", account.getUserName(), e.getMessage());
 			e.printStackTrace();
@@ -262,6 +250,7 @@ public class AccountController extends GenericFlowController {
 			if (getSelectedAccount() != null) {
 				if (!CONST_SUPPORT.equals(getSelectedAccount().getUserName())) {
 					accountService.delete(getSelectedAccount());
+					loadAccounts();
 					setSuccessMessage("success_delete_account", getSelectedAccount().getUserName());
 					reset();
 				} else {
@@ -270,7 +259,6 @@ public class AccountController extends GenericFlowController {
 			} else {
 				setFailureMessage("failure_update_user_null");
 			}
-			setAccounts(null);
 		} catch (Exception e) {
 			log.error("Error deleting account {} due to: {}", getSelectedAccount().getUserName(), e.getMessage());
 			e.printStackTrace();
@@ -297,6 +285,7 @@ public class AccountController extends GenericFlowController {
 							account.setEnabled(true); //enable the account
 						}
 						accountService.update(account);
+						loadAccounts();
 						if (enabling) {
 							setSuccessMessage("success_enabled_user", account.getUserName());
 						} else {
@@ -312,7 +301,6 @@ public class AccountController extends GenericFlowController {
 			} else {
 				setFailureMessage("failure_update_user_null");
 			}
-			setAccounts(null);
 		} catch (Exception e) {
 			log.error("Error updating status for account {} due to: {}", getSelectedAccount().getUserName(), e.getMessage());
 			e.printStackTrace();
@@ -423,6 +411,18 @@ public class AccountController extends GenericFlowController {
 
 	public void setPasswordBean(PasswordBean passwordBean) {
 		this.passwordBean = passwordBean;
+	}
+	
+	public List<Account> getAccounts() {
+		return this.accounts;
+	}
+	
+	public int numberOfAccounts() {
+		if (accounts != null) {
+			return accounts.size();
+		} else {
+			return 0;
+		}
 	}
 	
 	@Override

@@ -122,7 +122,6 @@ public class AccountServiceImpl extends GenericEntityServiceImpl<Account, String
         account.setNewsCount(0);
         account.setCommentCount(0);
         account.setBlogCount(0);
-        account.setEnabled(true);
         account.setUpdatePassword(GlobalConstants.CONST_NO);
         
         if (account.getRoles() == null || account.getRoles().isEmpty()) {

@@ -66,6 +66,7 @@ public class RegisterController extends GenericFlowController {
 				existingAccount = accountService.getByEmail(account.getEmail());
 				if (existingAccount == null) { //Email address not in system
 					account.setPassword(passwordBean.getPassword());
+					account.setEnabled(true);
 					accountService.create(account);
 					setSuccessMessage("success_register");
 					//send login details to new user
