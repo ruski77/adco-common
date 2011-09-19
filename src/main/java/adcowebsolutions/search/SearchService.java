@@ -6,15 +6,6 @@ import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.highlight.QueryScorer;
-import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
-import org.apache.lucene.util.Version;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +16,7 @@ public class SearchService {
 
 	private Logger log = LoggerFactory.getLogger(SearchService.class);
 
-    private FullTextEntityManager em;
+    //private FullTextEntityManager em;
 
     private String searchPattern;
     
@@ -59,45 +50,45 @@ public class SearchService {
     	
     	List<SearchResult> searchResults = null;
     	
-    	if (searchPattern == null || "".equals(searchPattern) ) {
-            searchPattern = null;
-            //FacesMessages.instance().add(Severity.WARN, WARN, "search_pattern_empty", null, null);
-            return new ArrayList<SearchResult>();
-        }
-    	
-    	Query luceneQuery = null;
-    	
-        MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_29, getSearchFields(), new StandardAnalyzer(Version.LUCENE_29));
-        parser.setAllowLeadingWildcard(true);
-
-    	try {
-    		luceneQuery = parser.parse(searchPattern);    		
-    	} catch (ParseException pe) {
-    		log.error("Failed to parse {} into Lucene query due to: {}", searchPattern, String.valueOf(pe.getMessage()));
-    		return null;
-		}
-    	
-    	FullTextQuery ftq = em.createFullTextQuery(luceneQuery);
-
-        List results = ftq.setFirstResult(getStartPage()).setMaxResults(Integer.parseInt(maxResultsPerPage)).getResultList();
-        
-        if (results != null && !results.isEmpty()) {
-        	searchResults = formatSearchResults(luceneQuery, results);
-        } else {
-        	searchResults = new ArrayList<SearchResult>();
-        }
-         
-        setTotalResults(ftq.getResultSize() > 0 ? ftq.getResultSize() : 0);
-        
-        setSearchPages(getTotalResults());
-    	
-    	long endTime = System.currentTimeMillis();
-    	setDuration((float)(endTime - startTime) / 1000);
+//    	if (searchPattern == null || "".equals(searchPattern) ) {
+//            searchPattern = null;
+//            //FacesMessages.instance().add(Severity.WARN, WARN, "search_pattern_empty", null, null);
+//            return new ArrayList<SearchResult>();
+//        }
+//    	
+//    	Query luceneQuery = null;
+//    	
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_29, getSearchFields(), new StandardAnalyzer(Version.LUCENE_29));
+//        parser.setAllowLeadingWildcard(true);
+//
+//    	try {
+//    		luceneQuery = parser.parse(searchPattern);    		
+//    	} catch (ParseException pe) {
+//    		log.error("Failed to parse {} into Lucene query due to: {}", searchPattern, String.valueOf(pe.getMessage()));
+//    		return null;
+//		}
+//    	
+//    	FullTextQuery ftq = em.createFullTextQuery(luceneQuery);
+//
+//        List results = ftq.setFirstResult(getStartPage()).setMaxResults(Integer.parseInt(maxResultsPerPage)).getResultList();
+//        
+//        if (results != null && !results.isEmpty()) {
+//        	searchResults = formatSearchResults(luceneQuery, results);
+//        } else {
+//        	searchResults = new ArrayList<SearchResult>();
+//        }
+//         
+//        setTotalResults(ftq.getResultSize() > 0 ? ftq.getResultSize() : 0);
+//        
+//        setSearchPages(getTotalResults());
+//    	
+//    	long endTime = System.currentTimeMillis();
+//    	setDuration((float)(endTime - startTime) / 1000);
         
         return searchResults;
     }
 
-	private List<SearchResult> formatSearchResults(Query luceneQuery, List results) {
+	private List<SearchResult> formatSearchResults(/*Query luceneQuery,*/ List results) {
 		
 		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		
@@ -109,8 +100,8 @@ public class SearchService {
     	
 		// Pass the Lucene Query to a Scorer that extracts matching spans for
         // the query and then uses these spans to score each fragment
-        QueryScorer scorer = new QueryScorer(luceneQuery);
-        SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class='termHL'>", "</span>");
+//        QueryScorer scorer = new QueryScorer(luceneQuery);
+ //       SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class='termHL'>", "</span>");
 //        Highlighter highlighter = new Highlighter(formatter, scorer);
 //        highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer, 390));
 //        Analyzer analyzer =  new StandardAnalyzer(Version.LUCENE_29);

@@ -1,6 +1,5 @@
 package adcowebsolutions.search;
 
-import org.hibernate.search.jpa.FullTextEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +8,7 @@ public class IndexerService {
 	
 	private Logger log = LoggerFactory.getLogger(IndexerService.class);
 	
-	private FullTextEntityManager em;
+	//private FullTextEntityManager em;
 
 	//@SuppressWarnings("unchecked")
 	//@Create
